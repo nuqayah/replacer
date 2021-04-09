@@ -1,0 +1,33 @@
+{
+  "devDependencies": {
+    "@codemirror/basic-setup": "^0.18.0",
+    "@codemirror/commands": "^0.18.0",
+    "@codemirror/lang-javascript": "^0.18.0",
+    "@codemirror/language": "^0.18.1",
+    "@codemirror/view": "^0.18.3",
+    "@rollup/plugin-commonjs": "^18.0.0",
+    "@rollup/plugin-node-resolve": "^11.2.1",
+    "cssnano": "^4.1.11",
+    "diff-match-patch": "^1.0.5",
+    "idb": "^6.0.0",
+    "npm-run-all": "^4.1.5",
+    "positioner": "github:mustafa0x/positioner",
+    "postcss": "^8.2.9",
+    "rollup": "^2.44.0",
+    "rollup-plugin-css-only": "^3.1.0",
+    "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-svelte": "^7.1.0",
+    "sirv-cli": "^1.0.11",
+    "svelte": "^3.37.0",
+    "svelte-preprocess-autoimport": "^0.2.1",
+    "terser": "^5.6.1"
+  },
+  "scripts": {
+    "build": "rollup -c && rm -rf dist && mkdir dist && node build.js && brotli dist/index.html",
+    "autobuild": "rollup -cw",
+    "dev": "run-p start:dev autobuild",
+    "start": "sirv public --single",
+    "start:dev": "sirv public --single --dev --host 0 --port 8085"
+  },
+  "type": "module"
+}

@@ -1,0 +1,125 @@
+@font-face {
+  font-family: Kitab;
+  font-display: block;
+  src: url(https://fonts.nuqayah.com/kitab-base.woff2?v1);
+}
+@font-face {
+  font-family: Kitab;
+  font-display: block;
+  src: url(https://fonts.nuqayah.com/kitab-base-b.woff2?v1);
+  font-weight: 700;
+}
+@font-face {
+  font-family: Kitab;
+  src: url(https://fonts.nuqayah.com/kitab-phrases.woff2?v1);
+}
+@font-face {
+  font-family: Kitab;
+  src: url(https://fonts.nuqayah.com/kitab-phrases.woff2?v1);
+  font-weight: 700;
+}
+
+/* General */
+*, ::after, ::before {
+  box-sizing: border-box;
+}
+
+:root {
+  --dark-blue: #216693;
+  --light-blue: #2995dc;
+}
+
+html {font-size: 22px;}
+@media (max-width: 992px) { html {font-size: 21px;} }
+@media (max-width: 768px) { html {font-size: 18.5px;} }
+@media (max-width: 576px) { html {font-size: 17px;} }
+
+body {
+  font-family: Kitab;
+  color: #444;
+  margin: 0;
+  direction: rtl;
+  overscroll-behavior-y: contain;
+  background-color: #fbfbfb;
+}
+html.safari body {
+  width: 100%;
+  position: fixed;
+  overflow: hidden;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  -webkit-overflow-scrolling: touch;
+}
+
+a {
+  text-decoration: none;
+}
+a, a:visited, .btn-link {
+  color: var(--light-blue);
+}
+a, button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Buttons and inputs */
+button {
+  padding: 0;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  margin: 0;
+}
+html.user-is-tabbing button {
+  outline: revert;
+}
+input, textarea, button {
+  font-size: inherit;
+  font-family: inherit;
+}
+input, textarea {
+  padding: 0.2rem 0.3rem;
+  border-radius: 3px;
+  margin-bottom: 0.2rem;
+  border: 1px solid #aaa;
+}
+form input, form textarea {
+  display: block;
+  width: 100%;
+}
+input:focus, textarea:focus {
+  border-color: #66afe9;
+  outline: 0;
+  box-shadow: 0 0 6px #77777761;
+}
+html.ios input, html.ios select, html.ios textarea {
+  font-size: 16px !important;
+}
+input[type=email], input[type=number] {
+  direction: ltr;
+}
+::placeholder {
+  color: #bbb;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.icon {
+  display: inline-block;
+  color: #444444;
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  vertical-align: middle;
+  font-size: 2em;
+  color: inherit;
+  pointer-events: none;
+}
