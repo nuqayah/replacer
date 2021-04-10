@@ -139,4 +139,6 @@ button.fancy:active {
   border-radius: 5px;
   display: flex;
 }
-
+html.user-is-tabbing button {
+  outline: revert;
+}

@@ -147,7 +147,7 @@ const insert_str_at = (str, i, sub, ln) => str.slice(0, i) + sub + str.slice(i +
 const get_max_id = () => $state.repls.map(repl => repl.id).sort((a, b) => a - b).findIndex((id, i) => id !== i + 1);
 const new_repl = id => ({
     enabled: true,
-    id: id || (get_max_id() + 1),
+    id: id || ((get_max_id() > -1 ? get_max_id() : $state.repls.length) + 1),
     type: 'regex',
     search: '',
     replace: '',
@@ -317,7 +317,7 @@ textarea.output, .textarea.output {
 textarea, .textarea {
   width: 100%;
   padding: 0.3rem 0.2rem;
-  font-family: Kitab;
+  font: 1.2rem Kitab;
   border: 0;
   border-radius: 0;
   border-top: 2px solid;
@@ -355,6 +355,7 @@ ol.repl-list > li > div>  .input-wrapper {
   font-family: monospace, NoName;
   display: inline-block;
   padding: 0 0.5px;
+  min-width: 0.6rem;
 }
 ol.repl-list > li.disabled .input-wrapper {
   background-color: #fafafa;

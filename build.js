@@ -18,7 +18,7 @@ async function main() {
     // Combine
     const pg = apply_repls(r('public/index.html'), [
         [/>\n+ */g, '>'],
-        [/<link rel=stylesheet[\s\S]+\.css>/, () => `<style>${css}</style>`],
+        [/<link rel=stylesheet[\s\S]+\.css>/, () => `<style>${css.replaceAll('/assets/', '')}</style>`],
         [/<script src[\s\S]*<\/script>/, () => `<script type=module>${js}</script>`],
     ]);
     const icons = apply_repls(r('public/assets/icons.svg'), [[/xmlns=".*?"/, 'hidden'], [/id="/g, 'id="icon-'], [/\n */g, ''], [/="([^ ]+)"/g, '=$1']]);

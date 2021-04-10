@@ -1,5 +1,5 @@
 function unique_lines(text) {
-    return [...new Set(text.split('\n'))].sort().join('\n');
+    return [...new Set(text.split('\n'))].join('\n');
 }
 function sort_lines(text) {
     return text.split('\n').sort().join('\n');
@@ -14,4 +14,7 @@ function reverse_lines(text) {
 function count_lines(text) {
     const map = text.split('\n').reduce((map, e) => map.set(e, (map.get(e) || 0) + 1), new Map());
     return map.entries().map(([k, v]) => `${k} --- ${v}`).join('\n');
+}
+function keep_matches(...args) {
+    return args.slice(-1)[0].split('\n').filter(l => l.includes('*')).join('\n');
 }

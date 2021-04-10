@@ -20,7 +20,7 @@ const preprocess = {
     },
 };
 const intro = `
-window.__HELPERS__ = ${JSON.stringify(r('src/util/helpers.js'))};
+window.__TEXT_FNS__ = ${JSON.stringify(r('src/util/text_fns.js'))};
 window.__BUILD_DATE__ = '${(new Date).toISOString()}';
 window.__BUILD_HASH__ = '${exec('git', ['rev-parse', '--short', 'HEAD']).toString().trim()}';
 `;

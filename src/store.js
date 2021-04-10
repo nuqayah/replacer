@@ -5,7 +5,7 @@ import {debounce} from './util/util.js';
 export const session = writable({loaded: false, db: null});
 export const state = writable({
     repls: [],
-    functions: window.__HELPERS__,
+    functions: window.__TEXT_FNS__,
 });
 
 async function init() {
