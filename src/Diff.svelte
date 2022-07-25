@@ -10,8 +10,6 @@
   {/each}
 </section>
 
-<div hidden><ins class=active></ins><del class=active></del></div>
-
 <script>
 import * as DiffMatchPatch from 'diff-match-patch';
 
@@ -50,13 +48,13 @@ section.diff-cont {
   max-width: 800px;
   line-height: 1.7;
 }
-ins { background: #e6ffe6; color: green; }
-del { background: #ffe6e6 }
+ins { background: lightgreen }
+del { background: lightcoral }
 ins, del {
   text-decoration: none;
   transition: background-color 200ms, padding 200ms;
 }
-ins.active, del.active {
+:is(ins,del).active {
   background-color: orange !important;
   padding: 0.2rem 0.5rem;
 }

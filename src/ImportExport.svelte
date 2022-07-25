@@ -1,5 +1,5 @@
-<textarea use:show_error_msg={textarea_error} on:input={e => input = e.target.value} readonly={export_type !== 'json'}>{text}</textarea>
-<button class=fancy on:click={save} disabled={!enable_save}>Save</button>
+<textarea use:show_tip={textarea_error} on:input={e => input = e.target.value} readonly={export_type !== 'json'}>{text}</textarea>
+<button class=btn on:click={save} disabled={!enable_save}>Save</button>
 
 <div class="radio-group flex-center">
   <label><input type=radio bind:group={export_type} value=json><div>json</div></label>
@@ -8,7 +8,14 @@
 
 <script>
 import {state} from './store.js';
-import {show_error_msg} from './ErrorMsg.svelte';
+import {options as tip_options} from 'components/src/Tooltip.svelte'
+
+function show_tip(el, err) {
+    function update(err) {
+        tip_options.set(err ? {show: true, msg: err, attach_to: el} : {show: false})
+    }
+    return {update}
+}
 
 const new_repl = () => ({
     enabled: true,
@@ -64,7 +71,7 @@ textarea {
   font-family: monospace;
   margin-bottom: 0.5rem;
 }
-button.fancy {
+button.btn {
   display: block;
   margin-left: auto;
 }

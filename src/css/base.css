@@ -20,10 +20,9 @@
   src: url(https://fonts.nuqayah.com/kitab-phrases.woff2?v3);
   unicode-range:  U+E100-E103, U+FD3E-FD45, U+FD47-FD4F, U+FDF2, U+FDFA-FDFB, U+FDFD-FDFF;
 }
-
-/* General */
-*, ::after, ::before {
-  box-sizing: border-box;
+@font-face {
+  font-family: NoName;
+  src: url(https://raw.githubusercontent.com/alif-type/noname-fixed/main/NoNameFixed-Regular.otf);
 }
 
 :root {
@@ -37,25 +36,11 @@ html {font-size: 22px;}
 @media (max-width: 576px) { html {font-size: 17px;} }
 
 body {
-  font-family: Kitab;
+  font-family: Kitab, sans-serif;
   color: #444;
-  margin: 0;
-  direction: rtl;
   overscroll-behavior-y: contain;
-  background-color: #fbfbfb;
-}
-html.safari body {
-  width: 100%;
-  position: fixed;
-  overflow: hidden;
-  -webkit-touch-callout: none;
-  touch-action: manipulation;
-  -webkit-overflow-scrolling: touch;
 }
 
-a {
-  text-decoration: none;
-}
 a, a:visited, .btn-link {
   color: var(--light-blue);
 }
@@ -63,22 +48,28 @@ a, button {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Buttons and inputs */
-button {
-  padding: 0;
-  border: none;
-  outline: none;
-  background: none;
-  cursor: pointer;
-  margin: 0;
+.icon {
+  display: inline-block;
+  color: #444444;
+  width: 0.85rem;
+  height: 0.85rem;
+  fill: currentColor;
+  vertical-align: middle;
+  color: inherit;
+  pointer-events: none;
 }
-html.user-is-tabbing button {
-  outline: revert;
-}
-input, textarea, button {
-  font-size: inherit;
-  font-family: inherit;
-}
+
+mark.repl-1, .mark.repl-1 { background-color: #ffa500; }
+mark.repl-2, .mark.repl-2 { background-color: #e3a857; }
+mark.repl-3, .mark.repl-3 { background-color: #c46210; }
+mark.repl-4, .mark.repl-4 { background-color: #ff7f50; }
+mark.repl-5, .mark.repl-5 { background-color: #ff8c00; }
+mark.repl-6, .mark.repl-6 { background-color: #ffefd5; }
+mark.repl-7, .mark.repl-7 { background-color: #ffdab9; }
+mark.repl-8, .mark.repl-8 { background-color: #ffe5b4; }
+mark.repl-9, .mark.repl-9 { background-color: #ff4500; }
+mark.repl-10, .mark.repl-10 { background-color: #ffdab9; }
+
 input, textarea {
   padding: 0.2rem 0.3rem;
   border-radius: 3px;
@@ -94,26 +85,73 @@ input:focus, textarea:focus {
   outline: 0;
   box-shadow: 0 0 6px #77777761;
 }
-html.ios input, html.ios select, html.ios textarea {
-  font-size: 16px !important;
+
+.faded {
+  color: #999;
 }
-input[type=email], input[type=number] {
-  direction: ltr;
+.noname {
+  font-family: noname;
 }
-::placeholder {
-  color: #bbb;
+.noname span {
+  display: inline-block;
 }
 
-[hidden] {
-  display: none !important;
+/* Radio groups */
+input[type=radio] {
+  display: none;
+}
+input[type=radio] + div {
+  color: #999;
+  display: inline-block;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem 0;
+  border: 2px solid #aaa;
+}
+input[type=radio]:checked + div {
+  color: white;
+  background: #2196f3;
+}
+.radio-group label:first-child div {
+  border-radius: 5px 0 0 5px;
+  border-left-width: 2px;
+}
+.radio-group label:last-child div {
+  border-radius: 0 5px 5px 0;
+  border-right-width: 1px;
+}
+input[type=radio] + div {
+  border-width: 2px 1px;
 }
 
-ul, ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.btn {
+  border: 1px solid #aaa;
+  padding: 0 0.5rem;
+  border-radius: 5px;
+  margin: 0 2px;
+  background-image: linear-gradient(to bottom, #fafbfc, #e9eced 90%);
+  font-size: 0.8rem;
+}
+.btn.active {
+  background-image: linear-gradient(to top, #fafbfc, #e9eced 90%);
 }
 
+.flex-column {display: flex; flex-direction: column; }
+.flex-end {align-items: flex-end;}
+.flex-1 {flex: 1;}
+.flex-center {display: flex; justify-content: center; }
+.align-center {
+  align-items: center;
+}
+
+.bordered {
+  padding: 0.3rem 0.1rem;
+  border: 2px solid grey;
+  border-radius: 5px;
+  display: flex;
+}
+html.user-is-tabbing button {
+  outline: revert;
+}
 .icon {
   display: inline-block;
   color: #444444;
@@ -123,4 +161,29 @@ ul, ol {
   vertical-align: middle;
   color: inherit;
   pointer-events: none;
+}
+
+
+/* Popover */
+.popover {
+  background: #fbfbfb;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 10px #ccc;
+  padding: 0.2rem 0.2rem;
+  margin-top: 0.1rem;
+  font-size: 0.9rem;
+}
+.popover-menu {
+  min-width: 6rem;
+}
+.popover-menu :is(button, a) {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.15rem 0.3rem;
+  border-radius: 0;
+}
+.popover-menu :is(button:hover, a:hover) {
+  background: #eee;
 }

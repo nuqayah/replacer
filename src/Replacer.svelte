@@ -3,25 +3,28 @@
 
 <ol class=repl-list>
 {#each $state.repls as repl, i (repl.id)}
-<li class:disabled={!repl.enabled} use:show_error_msg={repl_errors[i]} transition:slide|local animate:flip={{duration: 400}}>
+<li class:disabled={!repl.enabled} use:show_tip={repl_errors[i]} transition:slide|local animate:flip={{duration: 400}}>
   <div class="flex">
     <!-- Search -->
     <div class=input-wrapper>
       <div class=flex>
         <input bind:value={repl.search} type=text placeholder="search pattern">
-        <Menu btn_title={prep_flags(repl.flags)} btn_label="RegExp flags" btn_icon=chevron-bottom hidden={repl.type === 'plain'}>
-          {#each regex_flags as flag}
-            <li>
-              <button
-                on:click={() => {toggle_flag(repl, flag[0]); repl = repl}}
-                class:selected={repl.flags.includes(flag[0])}
-              >
-                <span class=checkmark> </span>
-                <span><strong>{flag[0]}</strong> — {@html flag[1]}</span>
-              </button>
-            </li>
-          {/each}
-        </Menu>
+        <Popover>
+          <button slot=button let:toggle on:click={toggle} title="RegExp flags" hidden={repl.type === 'plain'} on:mousedown={e => e.stopPropagation()}><icon id=chevron-bottom> {@html prep_flags(repl.flags)}</button>
+          <ul class="popover popover-menu">
+            {#each regex_flags as flag}
+              <li>
+                <button
+                  on:click={() => {toggle_flag(repl, flag[0]); repl = repl}}
+                  class:selected={repl.flags.includes(flag[0])}
+                >
+                  <span class=checkmark>&nbsp;</span>
+                  <span><strong>{flag[0]}</strong> — {@html flag[1]}</span>
+                </button>
+              </li>
+            {/each}
+          </ul>
+        </Popover>
       </div>
       {#if /\p{sc=Arabic}|\p{scx=Arabic}/u.test(repl.search)}
         <div class=split contenteditable on:cut={e => {e.preventDefault()}} on:paste={e => {e.preventDefault()}} on:keydown={allow_special}>{@html split_regex(repl.search)}</div>
@@ -35,43 +38,46 @@
       {:else}
         <input bind:value={repl.replace} type=text placeholder="replace pattern">
       {/if}
-      <Menu btn_title="ƒ()" btn_icon=chevron-bottom hidden={repl.type === 'plain'}>
+      <Popover btn_title="ƒ()" btn_icon=chevron-bottom hidden={repl.type === 'plain'}>
         <li>
           <button on:click={() => {repl.fn = null; repl = repl}} class:selected={!repl.fn}>
-            <span class=checkmark> </span>
+            <span class=checkmark>&nbsp;</span>
             <span>text</span>
           </button>
         </li>
         {#each Object.keys(replace_functions) as fn}
           <li>
             <button on:click={() => {repl.fn = fn; repl = repl}} class:selected={repl.fn === fn}>
-              <span class=checkmark> </span>
+              <span class=checkmark>&nbsp;</span>
               <code>{fn}</code>
             </button>
           </li>
         {/each}
-      </Menu>
+      </Popover>
     </div>
 
     <!-- Options -->
   <div class="flex align-center">
     <Toggle bind:value={repl.enabled}/>&nbsp;
-    <MenuStatic btn_title=Actions btn_icon=chevron-bottom>
-      <div class="flex action-wrap">
-        <div class="flex radio-group">
-          <label><input type=radio bind:group={repl.type} value=regex><div><code>.*</code></div></label>
-          <label><input type=radio bind:group={repl.type} value=plain><div><code>a=a</code></div></label>
-        </div>&nbsp;
-          <button class=fancy on:click={() => remove_repl(i)}>✕</button>
-          &nbsp;
-        {#if i > 0}
-          <button class=fancy on:click={() => move_repl(i, -1)}><span class=arrow-up>➤</span></button>
-        {/if}
-        {#if (i + 1) < $state.repls.length}
-          <button class=fancy on:click={() => move_repl(i, 1)}><span class=arrow-down>➤</span></button>
-        {/if}
-      </div>
-    </MenuStatic>&nbsp;
+    <Popover>
+      <button class=btn slot=button let:toggle on:click={toggle} title=Actions on:mousedown={e => e.stopPropagation()}><icon id=chevron-bottom></button>
+      <ul class="popover popover-menu">
+        <div class="flex action-wrap">
+          <div class="flex radio-group">
+            <label><input type=radio bind:group={repl.type} value=regex><div><code>.*</code></div></label>
+            <label><input type=radio bind:group={repl.type} value=plain><div><code>a=a</code></div></label>
+          </div>&nbsp;
+            <button class=btn on:click={() => remove_repl(i)}>✕</button>
+            &nbsp;
+          {#if i > 0}
+            <button class=btn on:click={() => move_repl(i, -1)}><span class=arrow-up>➤</span></button>
+          {/if}
+          {#if (i + 1) < $state.repls.length}
+            <button class=btn on:click={() => move_repl(i, 1)}><span class=arrow-down>➤</span></button>
+          {/if}
+        </div>
+      </ul>
+    </Popover>&nbsp;
     <div class=bordered>
       <span class="mark repl-{i + 1}" style="padding: 0 1rem; margin: 0 0.2rem;">&nbsp;</span>
       <span class=match-count>{matches[i]?.count || '0'}</span>
@@ -84,16 +90,16 @@
 
 <div>
   Live evaluation <Toggle bind:value={live_eval}/>
-  <button class=fancy on:click={() => { $state.repls = [...$state.repls, new_repl()]; }}>+ Add input</button>
-  <button class=fancy on:click={show_modal}><icon id=import-export> Import / Export</button>
-  <button class=fancy on:click={() => { input = apply_repls(input, get_repls()); }}>Move Output to Input</button>
-  <button class=fancy on:click={show_diff}>Diff</button>
+  <button class=btn on:click={() => { $state.repls = [...$state.repls, new_repl()]; }}>+ Add input</button>
+  <button class=btn on:click={show_modal}><icon id=import-export> Import / Export</button>
+  <button class=btn on:click={() => { input = apply_repls(input, get_repls()); }}>Move Output to Input</button>
+  <button class=btn on:click={show_diff}>Diff</button>
 </div>
 
 <button on:click={() => { editor_shown = !editor_shown; }} class="flex flex-end more-btn" class:expanded={editor_shown}>
   <h3>Replacement functions</h3> <icon id=chevron-bottom>
 </button>
-<div use:show_error_msg={script_error_msg}>
+<div use:show_tip={script_error_msg}>
   <CodeMirror bind:this={editor} on:change={debounce(update_functions, 1000)} max_height={editor_shown ? 500 : 0}/>
 </div>
 
@@ -114,16 +120,21 @@
 
 <script>
 import CodeMirror from './CodeMirror.svelte';
-import Toggle from './Toggle.svelte';
-import Menu from './Menu.svelte';
-import MenuStatic from './MenuStatic.svelte';
+import Toggle from 'components/src/Toggle.svelte'
+import Popover from 'components/src/Popover.svelte'
 import ImportExport from './ImportExport.svelte';
 import Diff from './Diff.svelte';
 import {state} from './store.js';
 import {debounce, unescape, html_entities} from './util/util.js';
-import {options as modal_options} from './Modal.svelte';
-import {show_error_msg} from './ErrorMsg.svelte';
+import {options as modal_options} from 'components/src/Modal.svelte'
+import {options as tip_options} from 'components/src/Tooltip.svelte'
 
+function show_tip(el, err) {
+    function update(err) {
+        tip_options.set(err ? {show: true, msg: err, attach_to: el} : {show: false})
+    }
+    return {update}
+}
 const show_modal = () => modal_options.set({component: ImportExport});
 const show_diff = () => modal_options.set({component: Diff, props: {a: input, b: output_el.value}});
 
@@ -317,7 +328,6 @@ textarea.output, .textarea.output {
 textarea, .textarea {
   width: 100%;
   padding: 0.3rem 0.2rem;
-  font: 1.2rem Kitab;
   border: 0;
   border-radius: 0;
   border-top: 2px solid;
@@ -335,13 +345,6 @@ ol.repl-list > li::marker {
   font-size: 1.2rem;
   font-weight: bold;
 }
-/*ol li {
-  counter-increment: li1;
-}
-li::before {
-  content: counter(li1) '.';
-  font-weight: bold;
-}*/
 
 ol.repl-list > li > div> .input-wrapper {
   flex: 1;
@@ -394,7 +397,7 @@ h3 + .icon {
   box-shadow: none;
   outline: none;
   flex: 1;
-  padding: 0.6rem 0.3rem;
+  padding: 0.3rem;
   background: inherit;
 }
 
