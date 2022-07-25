@@ -34,7 +34,7 @@ function bind(el) {
     return {
         update(msg) {
             if (msg)
-                positioner(el, attach_to.getBoundingClientRect(), 'top');
+                positioner(el, attach_to.getBoundingClientRect(), direction);
         },
     };
 }

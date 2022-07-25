@@ -343,7 +343,7 @@ li::before {
   font-weight: bold;
 }*/
 
-ol.repl-list > li > div>  .input-wrapper {
+ol.repl-list > li > div> .input-wrapper {
   flex: 1;
   margin: 0 7px;
 }
