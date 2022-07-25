@@ -1,5 +1,6 @@
 dist/
-package-lock.json
+pnpm-lock.yaml
 .DS_Store
 node_modules
-public/assets/bundle.*
+todo.md
+scraps.txt

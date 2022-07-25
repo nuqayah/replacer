@@ -2,15 +2,15 @@
 
 <script>
 import {keymap} from '@codemirror/view';
-import {EditorState, EditorView, basicSetup} from '@codemirror/basic-setup';
+import {EditorView, basicSetup} from 'codemirror';
 import {javascript} from '@codemirror/lang-javascript';
-import {defaultTabBinding} from '@codemirror/commands';
+import {indentWithTab} from '@codemirror/commands';
 import {indentOnInput, indentUnit} from '@codemirror/language';
 
 const extensions = [
     basicSetup,
     indentUnit.of('    '),
-    keymap.of([defaultTabBinding]),
+    keymap.of([indentWithTab]),
     javascript(),
     EditorView.updateListener.of(v => {
         if (v.docChanged)
@@ -18,7 +18,7 @@ const extensions = [
     }),
 ];
 const editor = new EditorView({
-    state: EditorState.create({extensions}),
+    extensions,
 });
 
 export const get_value = () => editor.state.doc.toString();

@@ -1,5 +1,8 @@
-import App from './App.svelte';
-import './util/preinit.js';
-import './store.js';
+import './css/tailwind.css'
+import './css/base.css'
+import './css/main.css'
+import './util/preinit.js'
+import './store.js'
+import App from './App.svelte'
 
-export default new App({target: document.body.firstElementChild});
+new App({target: document.body})

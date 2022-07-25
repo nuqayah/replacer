@@ -1,24 +1,4 @@
 @font-face {
-  font-family: Kitab;
-  font-display: block;
-  src: url(/assets/kitab-base.woff2);
-}
-@font-face {
-  font-family: Kitab;
-  font-display: block;
-  src: url(/assets/kitab-base-b.woff2);
-  font-weight: 700;
-}
-@font-face {
-  font-family: Kitab;
-  src: url(/assets/kitab-phrases.woff2);
-}
-@font-face {
-  font-family: Kitab;
-  src: url(/assets/kitab-phrases.woff2);
-  font-weight: 700;
-}
-@font-face {
   font-family: NoName;
   src: url(https://raw.githubusercontent.com/alif-type/noname-fixed/main/NoNameFixed-Regular.otf);
 }
@@ -35,21 +15,6 @@ body {
   margin: 0;
   font-family: Kitab, sans-serif;
 }
-input, textarea, button {
-  font-size: inherit;
-  font-family: inherit;
-}
-
-.icon {
-  display: inline-block;
-  color: #444444;
-  width: 0.85rem;
-  height: 0.85rem;
-  fill: currentColor;
-  vertical-align: middle;
-  color: inherit;
-  pointer-events: none;
-}
 
 mark.repl-1, .mark.repl-1 { background-color: #ffa500; }
 mark.repl-2, .mark.repl-2 { background-color: #e3a857; }
@@ -65,9 +30,6 @@ mark.repl-10, .mark.repl-10 { background-color: #ffdab9; }
 button {
   text-align: inherit;
   padding: 0.35rem 0.6rem;
-  border: none;
-  outline: none;
-  background: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }

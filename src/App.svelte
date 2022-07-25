@@ -1,7 +1,9 @@
+<main>
 {#if $session.loaded}
   <Replacer/>
   <Modal/>
 {/if}
+</main>
 
 <script>
 import { session } from './store.js';
