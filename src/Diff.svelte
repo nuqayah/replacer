@@ -37,7 +37,8 @@ function get_diff(a, b) {
 
 <style>
 section.diff-cont {
-  border: 1px solid grey;
+  border-top: 2px solid;
+  border-left: 2px solid;
   white-space: pre-line;
   height: 100%;
   overflow: auto;
@@ -45,8 +46,6 @@ section.diff-cont {
   padding: 0.2rem 0.3rem;
   border-radius: 3px;
   background-color: #fff;
-  max-width: 800px;
-  line-height: 1.7;
 }
 ins { background: lightgreen }
 del { background: lightcoral }
