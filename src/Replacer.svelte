@@ -113,7 +113,11 @@
   </div>
 
   <div class="flex-column flex-1 flex-basis-500">
-    <div class=flex><h3>Output</h3> <Toggle text=Diff bind:value={show_diff}/></div>
+    <div class="flex space-s-2">
+      <h3>Output</h3>
+      <button class=btn on:click={() => {copy_text(output); notifier.info('Copied')}}><icon id=copy></button>
+      <Toggle text=Diff bind:value={show_diff}/>
+    </div>
     {#if show_diff}
       <Diff a={input} b={output}/>
     {:else}
@@ -131,8 +135,10 @@ import ImportExport from './ImportExport.svelte';
 import Diff from './Diff.svelte';
 import {state} from './store.js';
 import {debounce, unescape, html_entities} from './util/util.js';
+import {copy_text} from 'components/src/util.js'
 import {show as modal_show} from 'components/src/Modal.svelte'
 import {options as tip_options} from 'components/src/Tooltip.svelte'
+import {notifier} from 'notifier'
 
 function show_tip(el, err) {
     function update(err) {
