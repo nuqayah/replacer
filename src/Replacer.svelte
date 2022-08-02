@@ -81,8 +81,8 @@
       </ul>
     </Popover>&nbsp;
     <div class=bordered>
-      <span class="mark repl-{i + 1}" style="padding: 0 1rem; margin: 0 0.2rem;">&nbsp;</span>
-      <span class=match-count>{matches[i]?.count || '0'}</span>
+      <span class="mark repl-{i + 1} px-4 mx-1">&nbsp;</span>
+      <span class=px-1 title=matches>{matches[i]?.count || '0'}</span>
     </div>
   </div>
 </div>
@@ -374,11 +374,6 @@ ol.repl-list > li > div> .input-wrapper {
 }
 ol.repl-list > li.disabled .input-wrapper {
   background-color: #fafafa;
-}
-.match-count {
-  display: inline-block;
-  width: 2rem;
-  text-align: center;
 }
 
 .more-btn { padding: 0; }

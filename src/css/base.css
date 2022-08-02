@@ -145,9 +145,8 @@ input[type=radio] + div {
 
 .bordered {
   padding: 0.3rem 0.1rem;
-  border: 2px solid grey;
-  border-radius: 5px;
   display: flex;
+  border-bottom: 2px solid;
 }
 html.user-is-tabbing button {
   outline: revert;
