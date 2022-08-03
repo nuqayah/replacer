@@ -1,4 +1,4 @@
-<section class=diff-cont dir=auto>
+<section class=diff-cont dir=auto bind:this={diff_cont}>
   {#each diff_data as [op, text]}
     {#if op == DiffMatchPatch.DIFF_INSERT}
       <ins>{text}</ins>
@@ -11,27 +11,47 @@
 </section>
 
 <script>
-import * as DiffMatchPatch from 'diff-match-patch';
+import * as DiffMatchPatch from 'diff-match-patch'
+import {int_clamp} from 'components/src/util.js'
 
-let timeout = 30;
-let cleanup_semantic = true;
-let cleanup_efficiency = false;
-let edit_cost = 4;
+export let a = ''
+export let b = ''
+export let changes_count = 0
 
-const dmp = new DiffMatchPatch.diff_match_patch();
+const dmp = new DiffMatchPatch.diff_match_patch()
+dmp.Diff_Timeout = 30
+dmp.Diff_EditCost = 4
 
-export let a;
-export let b;
-const diff_data = get_diff(a, b, {edit_cost, timeout, cleanup_semantic, cleanup_efficiency});
-function get_diff(a, b) {
-    dmp.Diff_EditCost = edit_cost;
-    dmp.Diff_Timeout = timeout;
-    const diff = dmp.diff_main(a, b);
-    if (cleanup_semantic)
-        dmp.diff_cleanupSemantic(diff);
-    if (cleanup_efficiency)
-        dmp.diff_cleanupEfficiency(diff);
-    return diff;
+let diff_cont
+let els = []
+let current_el = -1
+let diff_data = []
+
+$: if (a && b) {
+    show_diff(a, b)
+}
+$: if (diff_data && diff_cont) {
+    current_el = -1
+    tick().then(() => {
+        els = diff_cont.querySelectorAll('ins, del')
+    })
+}
+$: changes_count = els.length
+
+export function show_diff(a, b) {
+    diff_data = dmp.diff_main(a, b)
+    dmp.diff_cleanupSemantic(diff_data)
+}
+
+export function highlight_change(dir) {
+    if (!els.length)
+        return
+    current_el = int_clamp(current_el + dir, 0, els.length - 1)
+    els[current_el].scrollIntoView({behavior: 'smooth', block: 'center'})
+    els[current_el].classList.add('active')
+    els[current_el].addEventListener('transitionend', e => {
+        e.target.classList.remove('active')
+    }, {once: true})
 }
 </script>
 
@@ -45,7 +65,7 @@ section.diff-cont {
 
   padding: 0.2rem 0.3rem;
   border-radius: 3px;
-  background-color: #fff;
+  unicode-bidi: plaintext;
 }
 ins { background: lightgreen }
 del { background: lightcoral }
@@ -53,7 +73,7 @@ ins, del {
   text-decoration: none;
   transition: background-color 200ms, padding 200ms;
 }
-:is(ins,del).active {
+.diff-cont :global(:is(ins,del).active) {
   background-color: orange !important;
   padding: 0.2rem 0.5rem;
 }
