@@ -1,5 +1,5 @@
-<section class=diff-cont dir=auto bind:this={diff_cont}>
-  {#each diff_data as [op, text]}
+<section class=diff-cont dir=auto bind:this={diff_cont} on:scroll={debounce(add_diffs, 5)}>
+  {#each diff_data as [op, text], i (i)}
     {#if op == DiffMatchPatch.DIFF_INSERT}
       <ins>{text}</ins>
     {:else if op == DiffMatchPatch.DIFF_DELETE}
@@ -12,7 +12,7 @@
 
 <script>
 import * as DiffMatchPatch from 'diff-match-patch'
-import {int_clamp} from 'components/src/util.js'
+import {debounce, int_clamp} from 'components/src/util.js'
 
 export let a = ''
 export let b = ''
@@ -22,10 +22,12 @@ const dmp = new DiffMatchPatch.diff_match_patch()
 dmp.Diff_Timeout = 30
 dmp.Diff_EditCost = 4
 
+const DIFF_CHUNKS_COUNT = 250
 let diff_cont
 let els = []
 let current_el = -1
 let diff_data = []
+let diff_data_all = []
 
 $: if (a && b) {
     show_diff(a, b)
@@ -38,9 +40,24 @@ $: if (diff_data && diff_cont) {
 }
 $: changes_count = els.length
 
-export function show_diff(a, b) {
-    diff_data = dmp.diff_main(a, b)
+export async function show_diff(a, b) {
+    diff_data_all = dmp.diff_main(a, b)
     dmp.diff_cleanupSemantic(diff_data)
+    if (diff_data_all.length > 1e3 || Math.max(a.length, b.length) > 2e5) {
+        diff_data = diff_data_all.splice(0, DIFF_CHUNKS_COUNT)
+        await tick()
+        while (diff_data_all.length && diff_cont.scrollHeight <= diff_cont.clientHeight + 100) {
+            diff_data = diff_data.concat(diff_data_all.splice(0, DIFF_CHUNKS_COUNT))
+            await tick()
+        }
+    }
+    else
+        diff_data = diff_data_all
+}
+async function add_diffs() {
+    const el = diff_cont
+    if (diff_data_all.length && Math.ceil(el.scrollTop + el.offsetHeight + 200) > el.scrollHeight)
+        diff_data = diff_data.concat(diff_data_all.splice(0, DIFF_CHUNKS_COUNT))
 }
 
 export function highlight_change(dir) {
