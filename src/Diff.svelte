@@ -38,11 +38,11 @@ $: if (diff_data && diff_cont) {
         els = diff_cont.querySelectorAll('ins, del')
     })
 }
-$: changes_count = els.length
 
 export async function show_diff(a, b) {
     diff_data_all = dmp.diff_main(a, b)
-    dmp.diff_cleanupSemantic(diff_data)
+    dmp.diff_cleanupSemantic(diff_data_all)
+    changes_count = diff_data_all.reduce((acc, [op]) => acc + (op === DiffMatchPatch.DIFF_EQUAL ? 0 : 1) , 0)
     if (diff_data_all.length > 1e3 || Math.max(a.length, b.length) > 2e5) {
         diff_data = diff_data_all.splice(0, DIFF_CHUNKS_COUNT)
         await tick()
