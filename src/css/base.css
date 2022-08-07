@@ -86,41 +86,11 @@ input:focus, textarea:focus {
   box-shadow: 0 0 6px #77777761;
 }
 
-.faded {
-  color: #999;
-}
 .noname {
   font-family: noname;
 }
 .noname span {
   display: inline-block;
-}
-
-/* Radio groups */
-input[type=radio] {
-  display: none;
-}
-input[type=radio] + div {
-  color: #999;
-  display: inline-block;
-  cursor: pointer;
-  padding: 0.2rem 0.5rem 0;
-  border: 2px solid #aaa;
-}
-input[type=radio]:checked + div {
-  color: white;
-  background: #2196f3;
-}
-.radio-group label:first-child div {
-  border-radius: 5px 0 0 5px;
-  border-left-width: 2px;
-}
-.radio-group label:last-child div {
-  border-radius: 0 5px 5px 0;
-  border-right-width: 1px;
-}
-input[type=radio] + div {
-  border-width: 2px 1px;
 }
 
 .btn {
@@ -137,17 +107,11 @@ input[type=radio] + div {
 
 .flex-column {display: flex; flex-direction: column; }
 .flex-end {align-items: flex-end;}
-.flex-1 {flex: 1;}
 .flex-center {display: flex; justify-content: center; }
 .align-center {
   align-items: center;
 }
 
-.bordered {
-  padding: 0.3rem 0.1rem;
-  display: flex;
-  border-bottom: 2px solid;
-}
 html.user-is-tabbing button {
   outline: revert;
 }
@@ -161,7 +125,6 @@ html.user-is-tabbing button {
   color: inherit;
   pointer-events: none;
 }
-
 
 /* Popover */
 .popover {

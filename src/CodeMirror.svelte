@@ -7,7 +7,12 @@ import {javascript} from '@codemirror/lang-javascript'
 import {indentWithTab} from '@codemirror/commands'
 import {indentUnit} from '@codemirror/language'
 
+export let value = ''
+$: if (value)
+    set_value(value)
+
 const editor = new EditorView({
+    doc: value,
     extensions: [
         basicSetup,
         indentUnit.of('    '),
@@ -15,16 +20,17 @@ const editor = new EditorView({
         javascript(),
         EditorView.updateListener.of(v => {
             if (v.docChanged)
-                dispatch('change', v)
+                dispatch('input', v.state.doc.toString())
         }),
     ],
 });
 
 export const get_value = () => editor.state.doc.toString();
 export function set_value(value) {
-    editor.dispatch({
-        changes: {from: 0, to: editor.state.doc.length, insert: value},
-    });
+    if (value !== get_value())
+        editor.dispatch({
+            changes: {from: 0, to: editor.state.doc.length, insert: value},
+        })
 }
 export let max_height = 500;
 
@@ -35,8 +41,10 @@ const add_to_dom = el => { el.append(editor.dom); };
 .cm-wrapper {
   max-height: var(--max_height);
   overflow: auto;
-  border: 1px solid #aaa;
   transition: max-height 500ms;
+}
+.cm-wrapper :global(.cm-editor) {
+  padding: 0.1px;
 }
 .cm-wrapper :global(.cm-editor.cm-focused) {
   outline: none;
