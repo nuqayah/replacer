@@ -112,7 +112,7 @@ import Toggle from 'components/src/Toggle.svelte'
 import Popover from 'components/src/Popover.svelte'
 import ImportExport from './ImportExport.svelte';
 import ReplPresets from './ReplPresets.svelte'
-import Diff from './Diff.svelte';
+import Diff from 'components/src/Diff.svelte'
 import {state} from './store.js';
 import {debounce, copy_text, unescape_str, harakat_prep, rand_id, eval_script} from 'components/src/util.js'
 import {show as modal_show} from 'components/src/Modal.svelte'
