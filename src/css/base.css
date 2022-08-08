@@ -48,28 +48,6 @@ a, button {
   -webkit-tap-highlight-color: transparent;
 }
 
-.icon {
-  display: inline-block;
-  color: #444444;
-  width: 0.85rem;
-  height: 0.85rem;
-  fill: currentColor;
-  vertical-align: middle;
-  color: inherit;
-  pointer-events: none;
-}
-
-mark.repl-1, .mark.repl-1 { background-color: #ffa500; }
-mark.repl-2, .mark.repl-2 { background-color: #e3a857; }
-mark.repl-3, .mark.repl-3 { background-color: #c46210; }
-mark.repl-4, .mark.repl-4 { background-color: #ff7f50; }
-mark.repl-5, .mark.repl-5 { background-color: #ff8c00; }
-mark.repl-6, .mark.repl-6 { background-color: #ffefd5; }
-mark.repl-7, .mark.repl-7 { background-color: #ffdab9; }
-mark.repl-8, .mark.repl-8 { background-color: #ffe5b4; }
-mark.repl-9, .mark.repl-9 { background-color: #ff4500; }
-mark.repl-10, .mark.repl-10 { background-color: #ffdab9; }
-
 input, textarea {
   padding: 0.2rem 0.3rem;
   border-radius: 3px;
@@ -105,16 +83,10 @@ input:focus, textarea:focus {
   background-image: linear-gradient(to top, #fafbfc, #e9eced 90%);
 }
 
-.flex-column {display: flex; flex-direction: column; }
-.flex-end {align-items: flex-end;}
-.flex-center {display: flex; justify-content: center; }
-.align-center {
-  align-items: center;
-}
-
 html.user-is-tabbing button {
   outline: revert;
 }
+
 .icon {
   display: inline-block;
   color: #444444;
@@ -125,6 +97,17 @@ html.user-is-tabbing button {
   color: inherit;
   pointer-events: none;
 }
+
+mark.repl-1, .mark.repl-1 { background-color: #ffa500; }
+mark.repl-2, .mark.repl-2 { background-color: #e3a857; }
+mark.repl-3, .mark.repl-3 { background-color: #c46210; }
+mark.repl-4, .mark.repl-4 { background-color: #ff7f50; }
+mark.repl-5, .mark.repl-5 { background-color: #ff8c00; }
+mark.repl-6, .mark.repl-6 { background-color: #ffefd5; }
+mark.repl-7, .mark.repl-7 { background-color: #ffdab9; }
+mark.repl-8, .mark.repl-8 { background-color: #ffe5b4; }
+mark.repl-9, .mark.repl-9 { background-color: #ff4500; }
+mark.repl-10, .mark.repl-10 { background-color: #ffdab9; }
 
 /* Popover */
 .popover {

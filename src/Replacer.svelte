@@ -1,4 +1,4 @@
-<div class="wrapper flex-column">
+<div class="h-[100vh] flex flex-col">
 <header><h3>Replacer</h3></header>
 
 <div class="text-right">
@@ -50,7 +50,7 @@
     </div>
 
     <!-- Options -->
-  <div class="flex align-center space-s-2">
+  <div class="flex items-center space-s-2">
     <Toggle bind:value={repl.enabled}/>
     <Popover>
       <button class=btn slot=button let:show on:click={show} title=Actions><icon id=chevron-bottom></button>
@@ -70,7 +70,7 @@
 {/each}
 </ol>
 
-<button on:click={() => { editor_shown = !editor_shown; }} class="flex flex-end more-btn mt-3" class:expanded={editor_shown}>
+<button on:click={() => { editor_shown = !editor_shown; }} class="flex items-end more-btn mt-3" class:expanded={editor_shown}>
   <h3>Replacement functions</h3> <icon id=chevron-bottom>
 </button>
 <div use:show_tip={script_error_msg} style="border: 1px solid #aaa">
@@ -79,7 +79,7 @@
 
 <div class="flex flex-1 flex-wrap mt-3" style="min-height: 500px">
   {#if show_input}
-  <div class="flex-column flex-1 flex-basis-500 h-full">
+  <div class="flex flex-col flex-1 basis-[400px] h-full">
     <h3>Input</h3>
     <div class="textarea flex-1 input" dir=auto contenteditable=plaintext-only bind:this={input_el}
       on:blur={e => {input = e.target.innerText;}}
@@ -87,7 +87,7 @@
   </div>
   {/if}
 
-  <div class="flex-column flex-1 flex-basis-500 h-full">
+  <div class="flex flex-col flex-1 basis-[400px] h-full">
     <div class="flex space-s-2">
       <h3>Output</h3>
       <button class=btn on:click={() => {copy_text(output); notifier.info('Copied')}}><icon id=copy></button>
@@ -276,16 +276,10 @@ function update_functions(e) {
 </script>
 
 <style>
-.wrapper {
-  height: 100vh;
-}
 header {
   border-bottom: 2px solid grey;
   margin-bottom: 1rem;
   padding: 0.5rem 0;
-}
-header h3 {
-  margin: 0;
 }
 h3 {
   font-family: sans-serif;
@@ -344,7 +338,6 @@ ol.repl-list > li.disabled .input-wrapper {
   background-color: #fafafa;
 }
 
-.more-btn { padding: 0; }
 .more-btn > svg {
   transition: transform 200ms;
 }
@@ -392,12 +385,6 @@ h3 + .icon {
     flex-basis: 100%;
     margin: 0.2rem 0;
   }
-}
-.flex-wrap {
-  flex-wrap: wrap;
-}
-.flex-basis-500 {
-  flex-basis: 400px;
 }
 
 .popover-menu-checkboxes :is(button, a) {
