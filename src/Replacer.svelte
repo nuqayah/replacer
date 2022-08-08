@@ -74,14 +74,14 @@
   <h3>Replacement functions</h3> <icon id=chevron-bottom>
 </button>
 <div use:show_tip={script_error_msg} style="border: 1px solid #aaa">
-  <CodeMirror value={$state.functions} on:input={debounce(update_functions, 1000)} max_height={editor_shown ? 500 : 0}/>
+  <CodeMirror value={$state.functions} on:input={debounce(e => $state.functions = e.detail, 1000)} max_height={editor_shown ? 500 : 0}/>
 </div>
 
 <div class="flex flex-1 flex-wrap mt-3" style="min-height: 500px">
   {#if show_input}
   <div class="flex flex-col flex-1 basis-[400px] h-full">
     <h3>Input</h3>
-    <div class="textarea flex-1 input" dir=auto contenteditable=plaintext-only bind:this={input_el}
+    <div class="textarea flex-1 input" dir=auto contenteditable=plaintext-only
       on:blur={e => {input = e.target.innerText;}}
       on:paste={e => {let data = e.clipboardData.getData('text/plain'); setTimeout(() => {input = data}, 100);}}>{input}</div>
   </div>
@@ -114,8 +114,7 @@ import ImportExport from './ImportExport.svelte';
 import ReplPresets from './ReplPresets.svelte'
 import Diff from './Diff.svelte';
 import {state} from './store.js';
-import {debounce, unescape} from './util/util.js';
-import {copy_text} from 'components/src/util.js'
+import {debounce, copy_text, unescape_str, harakat_prep, rand_id, eval_script} from 'components/src/util.js'
 import {show as modal_show} from 'components/src/Modal.svelte'
 import {options as tip_options} from 'components/src/Tooltip.svelte'
 import {notifier} from 'notifier'
@@ -127,33 +126,30 @@ function show_tip(el, err) {
     function update(err) {
         tip_options.set(err ? {show: true, msg: err, attach_to: el} : {show: false})
     }
+    update(err)
     return {update}
 }
-
-const regex_flags = [
-    ['s', 'Allows <code>.</code> to match newline characters.'],
-    ['i', 'Case-insensitive search.'],
-    ['m', 'Changes <code>^</code> and <code>$</code> operate on each line, instead of the whole string'],
-    ['u', 'Unicode property search using <code>\\p</code> (and <code>\\P</code>, for negation).'],
-    ['g', 'Global search (finds all matches — not only the first).'],
-    ['h', 'Ḥarakāt-insensitive search: adds <span class=noname>[<span>ً</span>-<span>ْ</span>]*</span> after Arabic letters (not an actualy <code>RegExp</code> flag; may cause breakage).'],
-];
-
-const apply_repls = (s, repls) => repls.reduce((str, repl) => str[repl[0] instanceof RegExp ? 'replace' : 'replaceAll'](repl[0], repl[1]), s);
-const harakat_prep = s => RegExp(s.replace(/[ء-يّ]/g, '$&[ً-ْ]*'), 'g');
 function allow_special(e) {
     const is_special = e.keyCode < 47 || (e.keyCode > 90 && e.keyCode < 94) || e.metaKey; // Last is shortcut
     if (!is_special)
         e.preventDefault();
 }
 
-const insert_str_at = (str, i, sub, ln) => str.slice(0, i) + sub + str.slice(i + ln);
-const get_id = () => Math.random().toString(16).slice(2, 8)
-
+const apply_repls = (s, repls) => repls.reduce((str, repl) => str[repl[0] instanceof RegExp ? 'replace' : 'replaceAll'](repl[0], repl[1]), s)
+const new_repl = props => ({
+    enabled: true,
+    id: rand_id(),
+    search_is_regex: true,
+    replace_is_fn: false,
+    search: '',
+    replace: '',
+    flags: ['m', 'u', 'g'],
+    ...props,
+});
 function add_repls(repls) {
     repls = repls.map(repl => {
         const props = {
-            id: get_id(),
+            id: rand_id(),
             search: repl[0].toString(),
             replace: repl[1].toString(),
         }
@@ -168,35 +164,28 @@ function add_repls(repls) {
     $state.repls = [...$state.repls, ...repls]
 }
 
-const new_repl = props => ({
-    enabled: true,
-    id: props?.id || get_id(),
-    search_is_regex: true,
-    replace_is_fn: false,
-    search: '',
-    replace: '',
-    flags: ['m', 'u', 'g'],
-    ...props,
-});
-
+const regex_flags = [
+    ['s', 'Allows <code>.</code> to match newline characters.'],
+    ['i', 'Case-insensitive search.'],
+    ['m', 'Changes <code>^</code> and <code>$</code> operate on each line, instead of the whole string'],
+    ['u', 'Unicode property search using <code>\\p</code> (and <code>\\P</code>, for negation).'],
+    ['g', 'Global search (finds all matches — not only the first).'],
+    ['h', 'Ḥarakāt-insensitive search: adds <span class=noname>[<span>ً</span>-<span>ْ</span>]*</span> after Arabic letters (not an actualy <code>RegExp</code> flag; may cause breakage).'],
+];
 let repl_errors = [];
-let editor;
-let matches = [];
-if (!$state.repls.length)
-    $state.repls = [new_repl(), new_repl()]
-
 let changes_count = -1
 let output = ''
-let input_el;
 let live_eval = true;
 let show_diff = 0
 let show_input = true
 
 let editor_shown = false;
 let script_error_msg = '';
-let replace_functions = {};
+if (!$state.repls.length)
+    $state.repls = [new_repl(), new_repl()]
 
 const prep_flags = flags => regex_flags.map(([f]) => flags.includes(f) ? `<b>${f}</b>` : `<span class=text-gray-400>${f}</span>`).join('');
+const split_regex = s => s.replace(/./g, m => `<span class=${/\p{gc=Mn}/u.test(m) ? 'harakah' : ''}>${m}</span>`)
 function toggle_flag(repl, flag) {
     // Flags isn't a set to keep parsing and serializing simple
     const index = repl.flags.indexOf(flag);
@@ -223,19 +212,20 @@ async function prep_repl(repl, i) {
         }
     }
     else
-        search = unescape(repl.search)
+        search = unescape_str(repl.search)
 
-    try {
-        replace = repl.replace_is_fn ? await prep_fn(`${$state.functions}\n${more_methods}\nexport default ${replace}`) : unescape(replace)
-    }
-    catch (error) {
-        repl_errors[i] = error.message
-        return ['', '']
-    }
+    if (repl.replace_is_fn)
+        try {
+            replace = (await eval_script(`${$state.functions}\n${more_methods}\nexport default ${replace}`)).default
+        }
+        catch (error) {
+            repl_errors[i] = error.message
+            return ['', '']
+        }
+    else
+        replace = unescape_str(replace)
     return [search, replace]
 }
-
-const split_regex = s => s.replace(/./g, m => `<span class=${/\p{gc=Mn}/u.test(m) ? 'harakah' : ''}>${m}</span>`);
 
 $: if (live_eval && input) {
     $state.input = input
@@ -257,21 +247,6 @@ function remove_repl(i) {
         return;
     $state.repls.splice(i, 1);
     $state.repls = $state.repls;
-}
-
-async function prep_fn(script_text) {
-    const create_el = (tag, attrs) => Object.assign(document.createElement(tag), attrs)
-    const blob = new Blob([script_text], {type: 'application/javascript'})
-    const url = URL.createObjectURL(blob)
-    const script_el = create_el('script', {type: 'module', src: url})
-    document.body.appendChild(script_el)
-    const fn = (await import(/* @vite-ignore */ url)).default
-    script_el.remove()
-    return fn
-}
-function update_functions(e) {
-    const script_text = e.detail
-    $state.functions = script_text;
 }
 </script>
 
@@ -311,6 +286,10 @@ input[type=text] {
   border-right: 2px solid;
 }
 
+ol {
+  margin-inline-start:  2rem;
+  list-style: decimal;
+}
 ol.repl-list > li {
   margin: 0.2rem 1rem 0.2rem 0;
   flex-wrap: wrap;

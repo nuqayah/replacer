@@ -1,6 +1,6 @@
 import { writable, get } from 'svelte/store';
 import { openDB } from 'idb';
-import {debounce} from './util/util.js';
+import {debounce} from 'components/src/util.js'
 
 export const session = writable({loaded: false, db: null});
 export const state = writable({
