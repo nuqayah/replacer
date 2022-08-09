@@ -73,7 +73,7 @@
 <button on:click={() => { editor_shown = !editor_shown; }} class="flex items-end more-btn mt-3" class:expanded={editor_shown}>
   <h3>Replacement functions</h3> <icon id=chevron-bottom>
 </button>
-<div use:show_tip={script_error_msg} style="border: 1px solid #aaa">
+<div style="border: 1px solid #aaa">
   <CodeMirror value={$state.functions} on:input={debounce(e => $state.functions = e.detail, 1000)} max_height={editor_shown ? 500 : 0}/>
 </div>
 
@@ -180,7 +180,6 @@ let show_diff = 0
 let show_input = true
 
 let editor_shown = false;
-let script_error_msg = '';
 if (!$state.repls.length)
     $state.repls = [new_repl(), new_repl()]
 
@@ -227,13 +226,16 @@ async function prep_repl(repl, i) {
     return [search, replace]
 }
 
-$: if (live_eval && input) {
-    $state.input = input
-    repl_errors = [];
+const update_repls = debounce(() => {
     const repls = $state.repls.filter(r => r.enabled && r.search).map(prep_repl)
     Promise.all(repls).then(repls => {
         output = apply_repls(input, repls)
     })
+}, 1e3)
+$: if (live_eval && input) {
+    $state.input = input
+    repl_errors = [];
+    update_repls()
 }
 
 function move_repl(i, direction) {
