@@ -226,8 +226,8 @@ async function prep_repl(repl, i) {
     return [search, replace]
 }
 
-const update_repls = debounce(() => {
-    const repls = $state.repls.filter(r => r.enabled && r.search).map(prep_repl)
+const update_repls = debounce(repls => {
+    repls = repls.filter(r => r.enabled && r.search).map(prep_repl)
     Promise.all(repls).then(repls => {
         output = apply_repls(input, repls)
     })
@@ -235,7 +235,7 @@ const update_repls = debounce(() => {
 $: if (live_eval && input) {
     $state.input = input
     repl_errors = [];
-    update_repls()
+    update_repls($state.repls)
 }
 
 function move_repl(i, direction) {
