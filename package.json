@@ -1,7 +1,8 @@
 {
   "name": "replacer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": "github:mustafa0x/replacer",
+  "svelte": "src/main.js",
   "devDependencies": {
     "@codemirror/commands": "^6.0.1",
     "@codemirror/lang-javascript": "^6.0.2",
