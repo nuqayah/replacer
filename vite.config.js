@@ -56,7 +56,7 @@ export default defineConfig({
                 svelte_preprocess({markupTagName: 'not_a_tag'}),
             ],
             onwarn(warning, handler) {
-                if (['a11y-autofocus', 'a11y-no-onchange'].includes(warning.code))
+                if (['a11y-autofocus', 'security-anchor-rel-noreferrer'].includes(warning.code))
                     return
                 handler(warning)
             },

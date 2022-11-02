@@ -1,11 +1,9 @@
 import fs from 'fs'
 import postcss from 'postcss'
 import cssnano from 'cssnano'
-import glob from 'glob'
 import {minify} from 'terser'
 
 const r = f => fs.readFileSync(f, 'utf8')
-const r_glob = (pattern, sep='') => glob.sync(pattern, {nosort: true}).map(f => r(f)).join(sep)
 const min_js = async s => (await minify(s, {mangle: {toplevel: true}, toplevel: true, output: {comments: false}, compress: {global_defs: {'window.__DEBUG__': false}}})).code
 const cssnano_conf = {preset: ['default', {normalizeUrl: false, discardComments: {removeAll: true}}]}
 const min_css = async s => (await postcss([cssnano(cssnano_conf)]).process(s, {from: undefined})).css
@@ -17,7 +15,7 @@ async function main() {
         ['/icons.svg#', '#icon-', 1],
     ]))
 
-    const pg = apply_repls(r('public/index.html'), [
+    const pg = apply_repls(r('index.html'), [
         [/>\n+ */g, '>'],
         [/<!-- styles -->/, () => `<style>${css}</style>`],
         [/<script src[\s\S]*<\/script>/, () => `<script type=module>${js}</script>`],
