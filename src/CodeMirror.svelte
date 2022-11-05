@@ -6,35 +6,35 @@ import {keymap} from '@codemirror/view'
 import {javascript} from '@codemirror/lang-javascript'
 import {indentWithTab} from '@codemirror/commands'
 import {indentUnit} from '@codemirror/language'
+import {EditorState} from '@codemirror/state'
 
 export let value = ''
-$: if (value)
-    set_value(value)
 
-const editor = new EditorView({
-    doc: value,
-    extensions: [
-        basicSetup,
-        indentUnit.of('    '),
-        keymap.of([indentWithTab]),
-        javascript(),
-        EditorView.updateListener.of(v => {
-            if (v.docChanged)
-                dispatch('input', v.state.doc.toString())
-        }),
-    ],
-});
+const extensions = [
+    basicSetup,
+    indentUnit.of('    '),
+    keymap.of([indentWithTab]),
+    javascript(),
+    EditorView.updateListener.of(v => {
+        if (v.docChanged)
+      console.log('dispatching')
+        if (v.docChanged)
+            dispatch('input', v.state.doc.toString())
+    }),
+]
+const editor = new EditorView({doc: value, extensions})
 
 export const get_value = () => editor.state.doc.toString();
 export function set_value(value) {
-    if (value !== get_value())
-        editor.dispatch({
-            changes: {from: 0, to: editor.state.doc.length, insert: value},
-        })
+    editor.setState(EditorState.create({doc: value, extensions}))
 }
 export let max_height = 500;
 
-const add_to_dom = el => { el.append(editor.dom); };
+const add_to_dom = el => {
+    el.append(editor.dom)
+    if (value)
+        set_value(value)
+}
 </script>
 
 <style>

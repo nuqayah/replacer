@@ -82,7 +82,7 @@
   <div class="flex flex-col flex-1 basis-[400px] h-full">
     <h3>Input</h3>
     <div class="textarea flex-1 input" dir=auto contenteditable=plaintext-only
-      on:blur={e => {input = e.target.innerText;}}
+      on:input={e => {input = e.target.innerText}}
       on:paste={e => {let data = e.clipboardData.getData('text/plain'); setTimeout(() => {input = data}, 100);}}>{input}</div>
   </div>
   {/if}
@@ -97,7 +97,7 @@
       {/if}
     </div>
     {#if show_diff}
-      <Diff bind:changes_count a={input} b={output}/>
+      <Diff {pause_diffing} bind:changes_count a={input} b={output}/>
     {:else}
       <CodeMirrorPlain value={output}/>
     {/if}
@@ -121,6 +121,7 @@ import {notifier} from 'notifier'
 
 export let input = $state.input || ''
 export let more_methods = ''
+export let pause_diffing = false
 
 function show_tip(el, err) {
     function update(err) {
@@ -230,9 +231,11 @@ const update_repls = debounce(repls => {
     repls = repls.filter(r => r.enabled && r.search).map(prep_repl)
     Promise.all(repls).then(repls => {
         output = apply_repls(input, repls)
+        pause_diffing = false
     })
 }, 1e3)
 $: if (live_eval && input) {
+    pause_diffing = true
     $state.input = input
     repl_errors = [];
     update_repls($state.repls)
