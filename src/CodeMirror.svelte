@@ -17,8 +17,6 @@ const extensions = [
     javascript(),
     EditorView.updateListener.of(v => {
         if (v.docChanged)
-      console.log('dispatching')
-        if (v.docChanged)
             dispatch('input', v.state.doc.toString())
     }),
 ]

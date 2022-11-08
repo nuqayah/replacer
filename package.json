@@ -1,6 +1,6 @@
 {
   "name": "replacer",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "repository": "github:mustafa0x/replacer",
   "svelte": "src/main.js",
   "devDependencies": {
