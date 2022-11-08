@@ -11,7 +11,7 @@
 <ol class=repl-list>
 {#each $state.repls as repl, i (repl.id)}
 <li class:disabled={!repl.enabled} use:show_tip={repl_errors[i]} transition:slide|local animate:flip={{duration: 400}}>
-  <div class="flex">
+  <div class="grid gap-2 grid-cols-[repeat(2,_minmax(0,1fr))_auto]">
     <!-- Search -->
     <div class=input-wrapper>
       <div class=flex>
@@ -40,13 +40,13 @@
     </div>
 
     <!-- Replace -->
-    <div class="input-wrapper flex items-start">
+    <div class="input-wrapper">
+      <button class="btn float-right" class:active={repl.replace_is_fn} on:click={() => repl.replace_is_fn = !repl.replace_is_fn}>ƒ()</button>
       {#if repl.replace_is_fn}
-        <div class=flex-1><CodeMirror value={repl.replace} on:input={e => {repl.replace = e.detail}} max_height={300}/></div>
+        <CodeMirror value={repl.replace} on:input={e => {repl.replace = e.detail}} max_height={300}/>
       {:else}
         <input bind:value={repl.replace} type=text placeholder="replace with">
       {/if}
-      <button on:click={() => repl.replace_is_fn = !repl.replace_is_fn} class=btn class:active={repl.replace_is_fn}>ƒ()</button>
     </div>
 
     <!-- Options -->
@@ -304,10 +304,6 @@ ol.repl-list > li::marker {
   font-weight: bold;
 }
 
-ol.repl-list > li > div> .input-wrapper {
-  flex: 1;
-  margin: 0 7px;
-}
 .split {
   outline: none;
   background: #eee;
