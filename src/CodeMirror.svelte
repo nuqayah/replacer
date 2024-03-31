@@ -28,11 +28,7 @@ export function set_value(value) {
 }
 export let max_height = 500;
 
-const add_to_dom = el => {
-    el.append(editor.dom)
-    if (value)
-        set_value(value)
-}
+const add_to_dom = el => { el.append(editor.dom) }
 </script>
 
 <style>
