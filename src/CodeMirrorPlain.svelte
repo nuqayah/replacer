@@ -9,6 +9,7 @@ export let value = ''
 $: if (value)
     set_value(value)
 
+const dispatch = createEventDispatcher()
 const add_to_dom = el => { el.append(editor.dom) }
 
 const editor = new EditorView({

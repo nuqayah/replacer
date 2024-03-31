@@ -1,10 +1,10 @@
 import {defineConfig} from 'vite'
 import {svelte} from '@sveltejs/vite-plugin-svelte'
-import autoimport from 'svelte-preprocess-autoimport'
 import svelte_preprocess from 'svelte-preprocess'
 import path from 'path'
 import {execFileSync as exec} from 'child_process'
 import fs from 'fs'
+import AutoImport from 'unplugin-auto-import/vite'
 
 const r = f => fs.readFileSync(f, 'utf8')
 
@@ -52,7 +52,6 @@ export default defineConfig({
         svelte({
             preprocess: [
                 {markup: markup_repls},
-                autoimport(),
                 svelte_preprocess({markupTagName: 'not_a_tag'}),
             ],
             onwarn(warning, handler) {
@@ -60,6 +59,15 @@ export default defineConfig({
                     return
                 handler(warning)
             },
+        }),
+        AutoImport({
+            imports: [
+                'svelte',
+                'svelte/store',
+                'svelte/transition',
+                'svelte/animate',
+            ],
+            dts: './src/auto-imports.d.ts',
         }),
     ],
     optimizeDeps: {

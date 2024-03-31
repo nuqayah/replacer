@@ -10,6 +10,7 @@ import {EditorState} from '@codemirror/state'
 
 export let value = ''
 
+const dispatch = createEventDispatcher()
 const extensions = [
     basicSetup,
     indentUnit.of('    '),
