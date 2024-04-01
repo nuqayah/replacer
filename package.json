@@ -1,6 +1,6 @@
 {
   "name": "replacer",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "repository": "github:mustafa0x/replacer",
   "svelte": "src/main.js",
   "devDependencies": {
@@ -24,7 +24,6 @@
     "svelte": "^4.2.12",
     "svelte-preprocess": "^5.1.3",
     "tailwindcss": "^3.4.3",
-    "tailwindcss-rtl": "^0.9.0",
     "terser": "^5.30.0",
     "unplugin-auto-import": "^0.17.5",
     "vite": "^5.2.7",
