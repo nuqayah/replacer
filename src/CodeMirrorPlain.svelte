@@ -4,6 +4,7 @@
 import {EditorView, drawSelection, keymap} from '@codemirror/view'
 import {EditorState, EditorSelection} from '@codemirror/state'
 import {defaultKeymap, history, historyKeymap} from '@codemirror/commands'
+import {createEventDispatcher} from 'svelte'
 
 export let value = ''
 $: if (value)

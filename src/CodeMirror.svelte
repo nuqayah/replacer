@@ -7,6 +7,7 @@ import {javascript} from '@codemirror/lang-javascript'
 import {indentWithTab} from '@codemirror/commands'
 import {indentUnit} from '@codemirror/language'
 import {EditorState} from '@codemirror/state'
+import {createEventDispatcher} from 'svelte'
 
 export let value = ''
 
