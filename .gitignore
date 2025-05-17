@@ -1,4 +1,4 @@
 dist/
-pnpm-lock.yaml
 node_modules
 auto-imports.d.ts
+.vscode/settings.json
